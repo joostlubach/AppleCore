@@ -30,7 +30,7 @@ public class DataManager<T: NSManagedObject> {
     let mapper = DataMapper<NSManagedObject>(entityName: entityName, context: context)
 
     if let idMapping = mapper.IDMapping {
-      var predicate = NSPredicate(format: "\(idMapping.attribute) == %@", argumentArray: [id])
+      let predicate = NSPredicate(format: "\(idMapping.attribute) == %@", argumentArray: [id])
       return query.filter(predicate)[0]
     } else {
       assertionFailure("\(entityName) does not have an ID mapping")
@@ -42,9 +42,9 @@ public class DataManager<T: NSManagedObject> {
     return T(entity: entity, insertIntoManagedObjectContext: context.underlyingContext)
   }
 
-  public func deleteAll() -> Int {
+  public func deleteAll() throws -> Int {
     let querySet = QuerySet<NSManagedObject>(context.underlyingContext, entityName)
-    return querySet.delete().count
+    return try querySet.delete()
   }
 
   // MARK: JSON
@@ -97,7 +97,7 @@ public class DataManager<T: NSManagedObject> {
     mapper.mapJSON(json, toObject: object)
 
     for (key, value) in extra {
-      object.setValue(value, forKey: key)
+      (object as NSManagedObject).setValue(value, forKey: key)
     }
 
     return object
@@ -123,7 +123,7 @@ public class DataManager<T: NSManagedObject> {
           object = findOrInsertWithJSON(node, extra: extra)
         }
         if let orderKey = mapper.orderKey {
-          object.setValue(order, forKey: orderKey)
+          (object as NSManagedObject).setValue(order, forKey: orderKey)
         }
 
         set.append(object)

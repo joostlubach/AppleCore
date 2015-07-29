@@ -15,7 +15,7 @@ struct AppleCore {
       return
     }
 
-    println("Monkey ---> Entity \(entityName)")
+    print("Monkey ---> Entity \(entityName)")
   }
 
   static func traceID(id: String) {
@@ -23,7 +23,7 @@ struct AppleCore {
       return
     }
 
-    println("Monkey      ID: \(id)")
+    print("Monkey      ID: \(id)")
   }
 
   static func traceExisting() {
@@ -31,7 +31,7 @@ struct AppleCore {
       return
     }
 
-    println("Monkey      Existing - no update")
+    print("Monkey      Existing - no update")
   }
   
   static func traceInsert() {
@@ -39,7 +39,7 @@ struct AppleCore {
       return
     }
 
-    println("Monkey      Inserting")
+    print("Monkey      Inserting")
   }
   
   static func traceUpdate() {
@@ -47,12 +47,12 @@ struct AppleCore {
       return
     }
 
-    println("Monkey      Update")
+    print("Monkey      Update")
   }
   
   static func trace(message: String?) {
     if let msg = message {
-      println("Monkey      \(msg)")
+      print("Monkey      \(msg)")
     }
   }
   

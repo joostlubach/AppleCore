@@ -17,7 +17,7 @@ public protocol Mapping {
 
 public class CustomMapping<T: NSManagedObject>: Mapping {
 
-  typealias Handler = (T, json: JSON, context: ManagedObjectContext) -> Void
+  public typealias Handler = (T, json: JSON, context: ManagedObjectContext) -> Void
 
   public init(_ handler: Handler) {
     self.handler = handler
@@ -61,7 +61,7 @@ public class StandardMapping: Mapping {
     let value: AnyObject? = getValueFromJSON(json, context: context)
 
     if let val: AnyObject = value {
-      object.setValue(value, forKey: attribute)
+      object.setValue(val, forKey: attribute)
     } else if !skipIfMissing {
       object.setValue(nil, forKey: attribute)
     }
@@ -189,7 +189,7 @@ public class Base64Mapping: StringMapping {
 
   override func getValueFromJSON(json: JSON, context: ManagedObjectContextConvertible) -> AnyObject? {
     if let string = super.getValueFromJSON(json, context: context) as? String {
-      let data = NSData(base64EncodedString: string, options: nil)
+      let data = NSData(base64EncodedString: string, options: [])
       if data == nil {
         assertionFailure("Key `\(jsonKey)`: invalid Base64 string")
       }

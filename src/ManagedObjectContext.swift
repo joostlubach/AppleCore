@@ -52,7 +52,7 @@ public class ManagedObjectContext: NSObject {
 
   /// Performs a block on this context, passing this context.
   public func performBlock(block: () -> Void) -> Future<Void> {
-    var promise = Promise<Void>()
+    let promise = Promise<Void>()
 
     underlyingContext.performBlock {
       block()
@@ -63,60 +63,72 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Performs a block on this context, passing this context and waits until execution is finished.
-  public func performBlockAndWait(block: () -> Void) {
-    underlyingContext.performBlockAndWait(block)
+  public func performBlockAndWait(block: () throws -> Void) throws {
+    var blockError: NSError?
+
+    underlyingContext.performBlockAndWait {
+      do {
+        try block()
+      } catch let error as NSError {
+        blockError = error
+      } catch {}
+    }
+
+    if let error = blockError {
+      throw error
+    }
   }
 
   /// Saves data asynchronously using a block.
   ///
-  /// :returns: A future used to obtain a result status with.
+  /// - returns: A future used to obtain a result status with.
   public func save(block: (ManagedObjectContext) -> Void) -> Future<Void> {
-    var error: NSError? = nil
-    var promise = Promise<Void>()
+    let promise = Promise<Void>()
 
     underlyingContext.performBlock {
       block(self)
 
-      if self.saveChanges(error: &error) {
+      do {
+        try self.saveChanges()
         promise.success()
-      } else {
-        promise.failure(error!)
-      }
+      } catch let error as NSError {
+        promise.failure(error)
+      } catch {}
     }
 
     return promise.future
   }
 
   /// Saves data synchronously.
-  public func saveAndWait(error: NSErrorPointer = nil, block: (ManagedObjectContext) -> Void) -> Bool {
-    var returnValue = false
+  public func saveAndWait(block: (ManagedObjectContext) throws -> Void) throws {
+    var internalError: NSError?
+
     underlyingContext.performBlockAndWait {
-      block(self)
-      returnValue = self.saveChanges(error: error)
+      do {
+        try block(self)
+        try self.saveChanges()
+      } catch let error as NSError {
+        internalError = error
+      } catch {}
     }
-    return returnValue
+
+    if let error = internalError {
+      throw error
+    }
   }
 
   /// Saves any changes made in the context.
-  public func saveChanges(saveParents: Bool = true, error: NSErrorPointer = nil) -> Bool {
-    if !underlyingContext.hasChanges { return true }
+  public func saveChanges(saveParents: Bool = true) throws {
+    if !underlyingContext.hasChanges { return }
 
     if saveParents {
       var context: NSManagedObjectContext! = underlyingContext
       while context != nil {
-        var internalError: NSError? = nil
-        if !context.save(&internalError) {
-          println(internalError!)
-          if error != nil {
-            error.memory = internalError
-          }
-          return false
-        }
+        try context.save()
         context = context.parentContext
       }
-      return true
     } else {
-      return underlyingContext.save(error)
+      try underlyingContext.save()
     }
   }
 
