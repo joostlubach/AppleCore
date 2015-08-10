@@ -53,8 +53,8 @@ public class ManagedObjectContext: NSObject {
   public typealias ContextBlock = (ManagedObjectContext) -> Void
 
   /// Performs a block on this context.
-  public func performBlock(block: ContextBlock) -> Future<Void> {
-    var promise = Promise<Void>()
+  public func performBlock(block: ContextBlock) -> Future<Void, NoError> {
+    var promise = Promise<Void, NoError>()
 
     underlyingContext.performBlock {
       block(self)
@@ -74,9 +74,9 @@ public class ManagedObjectContext: NSObject {
   /// Saves data asynchronously using a block.
   ///
   /// :returns: A future used to obtain a result status with.
-  public func save(block: ContextBlock) -> Future<Void> {
+  public func save(block: ContextBlock) -> Future<Void, NSError> {
     var error: NSError? = nil
-    var promise = Promise<Void>()
+    var promise = Promise<Void, NSError>()
 
     underlyingContext.performBlock {
       block(self)

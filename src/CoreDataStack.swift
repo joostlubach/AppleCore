@@ -78,10 +78,10 @@ public class CoreDataStack {
   }
 
   /// Saves changes asynchronously using the given block on the given context.
-  func save(#context: NamedObjectContext, block: ManagedObjectContext.ContextBlock) -> Future<Void> {
+  func save(#context: NamedObjectContext, block: ManagedObjectContext.ContextBlock) -> Future<Void, NSError> {
     return namedContext(context).save(block)
   }
-  func save(block: ManagedObjectContext.ContextBlock) -> Future<Void> {
+  func save(block: ManagedObjectContext.ContextBlock) -> Future<Void, NSError> {
     return save(context: .Background, block: block)
   }
 
