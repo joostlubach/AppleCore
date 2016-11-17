@@ -1,0 +1,5 @@
+# Must all be in Swift 3.0!
+github "antitypical/Result" "master"
+github "SwiftyJSON/SwiftyJSON"
+github "Thomvis/BrightFutures"
+github "QueryKit/QueryKit"

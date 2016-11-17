@@ -1,0 +1,4 @@
+github "QueryKit/QueryKit" "0.13.0"
+github "antitypical/Result" "25f2d7c051df40d173519814126a5d88ac720030"
+github "SwiftyJSON/SwiftyJSON" "v3.1.1"
+github "Thomvis/BrightFutures" "v5.0.1"

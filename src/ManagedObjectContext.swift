@@ -3,7 +3,7 @@ import BrightFutures
 import QueryKit
 
 /// Wrapper around NSManagedObjectContext.
-public class ManagedObjectContext: NSObject {
+open class ManagedObjectContext: NSObject {
 
   /// Initializes the context with the given underlying context.
   public init(underlyingContext: NSManagedObjectContext) {
@@ -11,50 +11,50 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Initializes the context with a new underlying context with the given options.
-  public convenience init(concurrencyType: NSManagedObjectContextConcurrencyType = .PrivateQueueConcurrencyType, parentContext: ManagedObjectContext? = nil) {
+  public convenience init(concurrencyType: NSManagedObjectContextConcurrencyType = .privateQueueConcurrencyType, parentContext: ManagedObjectContext? = nil) {
     self.init(underlyingContext: NSManagedObjectContext(concurrencyType: concurrencyType))
 
     if let context = parentContext {
-      underlyingContext.performBlockAndWait {
-        self.underlyingContext.parentContext = context.underlyingContext
+      underlyingContext.performAndWait {
+        self.underlyingContext.parent = context.underlyingContext
       }
     }
   }
 
   deinit {
     if isObserver {
-      NSNotificationCenter.defaultCenter().removeObserver(self)
+      NotificationCenter.default.removeObserver(self)
     }
   }
 
   // MARK: Properties
 
   /// The underlying NSManagedObjectContext instance.
-  public let underlyingContext: NSManagedObjectContext
+  open let underlyingContext: NSManagedObjectContext
 
   /// Creates a QuerySet of given type for this context.
-  public func query<T: NSManagedObject>(type: T.Type) -> QuerySet<T> {
-    return QuerySet<T>(underlyingContext, NSStringFromClass(T))
+  open func query<T: NSManagedObject>(_ type: T.Type) -> QuerySet<T> {
+    return QuerySet<T>(underlyingContext, NSStringFromClass(T.self))
   }
 
   /// Creates a data manager of given type for this context.
-  public func manager<T: NSManagedObject>(type: T.Type) -> DataManager<T> {
+  open func manager<T: NSManagedObject>(_ type: T.Type) -> DataManager<T> {
     return DataManager<T>(context: self)
   }
 
   // MARK: - Operations
 
-  public func insert<T: NSManagedObject>(type: T.Type) -> T {
-    let entityName = NSStringFromClass(T)
-    let entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: underlyingContext)!
-    return T(entity: entity, insertIntoManagedObjectContext: underlyingContext)
+  open func insert<T: NSManagedObject>(_ type: T.Type) -> T {
+    let entityName = NSStringFromClass(T.self)
+    let entity = NSEntityDescription.entity(forEntityName: entityName, in: underlyingContext)!
+    return T(entity: entity, insertInto: underlyingContext)
   }
 
   /// Performs a block on this context, passing this context.
-  public func performBlock(block: () throws -> Void) -> Future<Void, NSError> {
+  open func performBlock(_ block: @escaping () throws -> Void) -> Future<Void, NSError> {
     let promise = Promise<Void, NSError>()
 
-    underlyingContext.performBlock {
+    underlyingContext.perform {
       do {
         try block()
         promise.success()
@@ -67,10 +67,10 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Performs a throwing block on this context, and waits until execution is finished.
-  public func performBlockAndWait(block: () throws -> Void) throws {
+  open func performBlockAndWait(_ block: @escaping () throws -> Void) throws {
     var internalError: NSError?
 
-    underlyingContext.performBlockAndWait {
+    underlyingContext.performAndWait {
       do {
         try block()
       } catch let error as NSError {
@@ -84,17 +84,17 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Performs a non-throwing block on this context, and waits until execution is finished.
-  public func performBlockAndWait(block: () -> Void) {
-    underlyingContext.performBlockAndWait(block)
+  open func performBlockAndWait(_ block: @escaping () -> Void) {
+    underlyingContext.performAndWait(block)
   }
 
   /// Saves data asynchronously using a block.
   ///
   /// - returns: A future used to obtain a result status with.
-  public func save(block: (ManagedObjectContext) throws -> Void) -> Future<Void, NSError> {
+  open func save(_ block: @escaping (ManagedObjectContext) throws -> Void) -> Future<Void, NSError> {
     let promise = Promise<Void, NSError>()
 
-    underlyingContext.performBlock {
+    underlyingContext.perform {
       do {
         try block(self)
         try self.saveChanges()
@@ -108,10 +108,10 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Saves data synchronously.
-  public func saveAndWait(block: (ManagedObjectContext) throws -> Void) throws {
+  open func saveAndWait(_ block: @escaping (ManagedObjectContext) throws -> Void) throws {
     var internalError: NSError?
 
-    underlyingContext.performBlockAndWait {
+    underlyingContext.performAndWait {
       do {
         try block(self)
         try self.saveChanges()
@@ -126,14 +126,14 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Saves any changes made in the context.
-  public func saveChanges(saveParents: Bool = true) throws {
+  open func saveChanges(_ saveParents: Bool = true) throws {
     if !underlyingContext.hasChanges { return }
 
     if saveParents {
       var context: NSManagedObjectContext! = underlyingContext
       while context != nil {
         try context.save()
-        context = context.parentContext
+        context = context.parent
       }
     } else {
       try underlyingContext.save()
@@ -141,14 +141,14 @@ public class ManagedObjectContext: NSObject {
   }
 
   /// Deletes an object from this context.
-  public func deleteObject(object: NSManagedObject) {
-    underlyingContext.deleteObject(object)
+  open func deleteObject(_ object: NSManagedObject) {
+    underlyingContext.delete(object)
   }
 
   /// Gets a copy of the given managed object in the current context.
-  public func get<T: NSManagedObject>(object: T) -> T {
+  open func get<T: NSManagedObject>(_ object: T) -> T {
     let objectID = object.objectID
-    return underlyingContext.objectWithID(objectID) as! T
+    return underlyingContext.object(with: objectID) as! T
   }
 
   // MARK: - Synchronization
@@ -157,12 +157,12 @@ public class ManagedObjectContext: NSObject {
   var contextsToMergeChangesInto: [ManagedObjectContext] = []
 
   /// Makes sure that when this context is saved, its changed are merged into the target context.
-  func mergeChangesInto(context: ManagedObjectContext) {
+  func mergeChangesInto(_ context: ManagedObjectContext) {
     if !isObserver {
-      NSNotificationCenter.defaultCenter().addObserver(
+      NotificationCenter.default.addObserver(
         self,
-        selector: "contextDidSave:",
-        name: NSManagedObjectContextDidSaveNotification,
+        selector: #selector(ManagedObjectContext.contextDidSave(_:)),
+        name: NSNotification.Name.NSManagedObjectContextDidSave,
         object: underlyingContext
       )
       isObserver = true
@@ -171,10 +171,10 @@ public class ManagedObjectContext: NSObject {
     contextsToMergeChangesInto.append(context)
   }
 
-  func contextDidSave(notification: NSNotification) {
+  func contextDidSave(_ notification: Notification) {
     for context in contextsToMergeChangesInto {
-      context.underlyingContext.performBlock {
-        context.underlyingContext.mergeChangesFromContextDidSaveNotification(notification)
+      context.underlyingContext.perform {
+        context.underlyingContext.mergeChanges(fromContextDidSave: notification)
       }
     }
   }

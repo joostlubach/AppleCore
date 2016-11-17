@@ -7,21 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A48FAAED1DC3654E004BA89B /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A48FAAEC1DC3654E004BA89B /* BrightFutures.framework */; };
+		A4A4B6C21DC32C250080890A /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D54D31C0754BB004F76AF /* SwiftyJSON.framework */; };
+		A4A4B6C31DC32C410080890A /* QueryKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83AC00C1C0D9853004C3AB1 /* QueryKit.framework */; };
+		A4A4B6C41DC32C410080890A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D54D21C0754BB004F76AF /* Result.framework */; };
 		C80877FA1B1F48DD00621E25 /* AppleCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C80877F91B1F48DD00621E25 /* AppleCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C80878111B1F490100621E25 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80878101B1F490100621E25 /* CoreDataStack.swift */; };
 		C808781D1B1F4B5B00621E25 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808781C1B1F4B5B00621E25 /* ManagedObjectContext.swift */; };
 		C808781F1B1F4B8400621E25 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808781E1B1F4B8400621E25 /* DataManager.swift */; };
 		C80878211B1F4B9B00621E25 /* DataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80878201B1F4B9B00621E25 /* DataMapper.swift */; };
 		C80878231B1F4D2800621E25 /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80878221B1F4D2800621E25 /* StringUtil.swift */; };
-		C83AC00D1C0D9853004C3AB1 /* QueryKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83AC00C1C0D9853004C3AB1 /* QueryKit.framework */; };
 		C8440EA51B304FBB00F5FFF2 /* NSManagedObject+AppleCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8440EA41B304FBB00F5FFF2 /* NSManagedObject+AppleCore.swift */; };
 		C888896C1B32D72700853895 /* AppleCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C888896B1B32D72700853895 /* AppleCore.swift */; };
-		C8DBD38E1C0755C7007A581F /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D54D11C0754BB004F76AF /* BrightFutures.framework */; };
-		C8DBD38F1C0755C7007A581F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D54D21C0754BB004F76AF /* Result.framework */; };
-		C8DBD3901C0755C7007A581F /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D54D31C0754BB004F76AF /* SwiftyJSON.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A48FAAEC1DC3654E004BA89B /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = ../Monkey/Carthage/Build/iOS/BrightFutures.framework; sourceTree = "<group>"; };
 		C80877F41B1F48DD00621E25 /* AppleCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppleCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C80877F81B1F48DD00621E25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C80877F91B1F48DD00621E25 /* AppleCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppleCore.h; sourceTree = "<group>"; };
@@ -43,10 +44,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C83AC00D1C0D9853004C3AB1 /* QueryKit.framework in Frameworks */,
-				C8DBD38E1C0755C7007A581F /* BrightFutures.framework in Frameworks */,
-				C8DBD38F1C0755C7007A581F /* Result.framework in Frameworks */,
-				C8DBD3901C0755C7007A581F /* SwiftyJSON.framework in Frameworks */,
+				A48FAAED1DC3654E004BA89B /* BrightFutures.framework in Frameworks */,
+				A4A4B6C31DC32C410080890A /* QueryKit.framework in Frameworks */,
+				A4A4B6C41DC32C410080890A /* Result.framework in Frameworks */,
+				A4A4B6C21DC32C250080890A /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +90,7 @@
 		C80878191B1F498700621E25 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A48FAAEC1DC3654E004BA89B /* BrightFutures.framework */,
 				C83AC00C1C0D9853004C3AB1 /* QueryKit.framework */,
 				C86D54D11C0754BB004F76AF /* BrightFutures.framework */,
 				C86D54D21C0754BB004F76AF /* Result.framework */,
@@ -137,12 +139,13 @@
 			attributes = {
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Metritz BV";
 				TargetAttributes = {
 					C80877F31B1F48DD00621E25 = {
 						CreatedOnToolsVersion = 6.3.2;
 						DevelopmentTeam = 9WAP3C3KC8;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -204,8 +207,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -230,7 +235,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -254,8 +259,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -273,9 +280,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -287,6 +295,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -294,13 +303,14 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metritz.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -308,6 +318,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -315,12 +326,13 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metritz.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

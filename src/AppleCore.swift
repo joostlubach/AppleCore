@@ -3,23 +3,23 @@ import Foundation
 struct AppleCore {
 
   enum TraceLevel {
-    case None
-    case EntitiesOnly
-    case All
+    case none
+    case entitiesOnly
+    case all
   }
 
-  static var traceLevel = TraceLevel.EntitiesOnly
+  static var traceLevel = TraceLevel.entitiesOnly
 
-  static func traceEntity(entityName: String) {
-    if traceLevel == .None {
+  static func traceEntity(_ entityName: String) {
+    if traceLevel == .none {
       return
     }
 
     print("Monkey ---> Entity \(entityName)")
   }
 
-  static func traceID(id: String) {
-    if traceLevel == .None {
+  static func traceID(_ id: String) {
+    if traceLevel == .none {
       return
     }
 
@@ -27,7 +27,7 @@ struct AppleCore {
   }
 
   static func traceExisting() {
-    if traceLevel == .None {
+    if traceLevel == .none {
       return
     }
 
@@ -35,7 +35,7 @@ struct AppleCore {
   }
   
   static func traceInsert() {
-    if traceLevel == .None {
+    if traceLevel == .none {
       return
     }
 
@@ -43,14 +43,14 @@ struct AppleCore {
   }
   
   static func traceUpdate() {
-    if traceLevel == .None {
+    if traceLevel == .none {
       return
     }
 
     print("Monkey      Update")
   }
   
-  static func trace(message: String?) {
+  static func trace(_ message: String?) {
     if let msg = message {
       print("Monkey      \(msg)")
     }

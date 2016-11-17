@@ -3,10 +3,10 @@ import QueryKit
 import BrightFutures
 
 /// A class encapsulating an entire core data stack, with support for background contexts.
-public class CoreDataStack {
+open class CoreDataStack {
 
   /// Initializes the stack with a SQLLite store at the given URL and the given managed object model.
-  public init?(storeURL: NSURL, managedObjectModel model: NSManagedObjectModel) {
+  public init?(storeURL: URL, managedObjectModel model: NSManagedObjectModel) {
     if let coordinator = CoreDataStack.createPersistentStoreCoordinator(storeURL: storeURL, usingModel: model) {
       persistentStoreCoordinator = coordinator
     } else {
@@ -26,7 +26,7 @@ public class CoreDataStack {
   // MARK: Clean up
 
   /// Cleans up when the application exits.
-  public func cleanUp() {
+  open func cleanUp() {
     do {
       try mainContext.saveChanges()
     } catch _ {
@@ -39,8 +39,8 @@ public class CoreDataStack {
   let persistentStoreCoordinator: NSPersistentStoreCoordinator
 
   /// The managed object context associated with the main thread.
-  public lazy var mainContext: ManagedObjectContext = {
-    let context = ManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+  open lazy var mainContext: ManagedObjectContext = {
+    let context = ManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     context.underlyingContext.persistentStoreCoordinator = self.persistentStoreCoordinator
     return context
   }()
@@ -49,11 +49,11 @@ public class CoreDataStack {
   ///
   /// - parameter isolated:   Set to true to created an isolated thread, which does not permeate its changes
   ///                    to the main context.
-  public func newBackgroundContext(isolated: Bool = false) -> ManagedObjectContext {
+  open func newBackgroundContext(_ isolated: Bool = false) -> ManagedObjectContext {
     if isolated {
-      return ManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+      return ManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     } else {
-      return ManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType, parentContext: mainContext)
+      return ManagedObjectContext(concurrencyType: .privateQueueConcurrencyType, parentContext: mainContext)
     }
   }
 
@@ -61,17 +61,17 @@ public class CoreDataStack {
   ///
   /// - parameter isolated:   Set to true to created an isolated thread, which does not permeate its changes
   ///                    to the main context.
-  public func newMainContext(isolated: Bool = false) -> ManagedObjectContext {
+  open func newMainContext(_ isolated: Bool = false) -> ManagedObjectContext {
     if isolated {
-      return ManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+      return ManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     } else {
-      return ManagedObjectContext(concurrencyType: .MainQueueConcurrencyType, parentContext: mainContext)
+      return ManagedObjectContext(concurrencyType: .mainQueueConcurrencyType, parentContext: mainContext)
     }
   }
 
   /// Creates a new context on the main thread, with the given context as parent context.
-  public func newMainContext(parentContext: ManagedObjectContext) -> ManagedObjectContext {
-    return ManagedObjectContext(concurrencyType: .MainQueueConcurrencyType, parentContext: parentContext)
+  open func newMainContext(_ parentContext: ManagedObjectContext) -> ManagedObjectContext {
+    return ManagedObjectContext(concurrencyType: .mainQueueConcurrencyType, parentContext: parentContext)
   }
 
   // MARK: - Convenience accessors
@@ -80,34 +80,34 @@ public class CoreDataStack {
   public enum NamedObjectContext {
 
     /// The main context.
-    case Main
+    case main
 
     /// A new background (private queue) context.
-    case Background
+    case background
 
     /// A new isolated background context.
-    case Isolated
+    case isolated
 
   }
 
   /// Creates a new query for the given type.
-  public func query<T: NSManagedObject>(type: T.Type, context: NamedObjectContext = .Main) -> QuerySet<T> {
+  open func query<T: NSManagedObject>(_ type: T.Type, context: NamedObjectContext = .main) -> QuerySet<T> {
     return namedContext(context).query(type)
   }
 
   /// Creates a data manager for the given type.
-  public func manager<T: NSManagedObject>(type: T.Type, context: NamedObjectContext = .Main) -> DataManager<T> {
+  open func manager<T: NSManagedObject>(_ type: T.Type, context: NamedObjectContext = .main) -> DataManager<T> {
     return namedContext(context).manager(type)
   }
 
   /// Converts a named context into an actual ManagedObjectContext object.
-  func namedContext(name: NamedObjectContext) -> ManagedObjectContext {
+  func namedContext(_ name: NamedObjectContext) -> ManagedObjectContext {
     switch name {
-    case .Main:
+    case .main:
       return mainContext
-    case .Background:
+    case .background:
       return newBackgroundContext()
-    case .Isolated:
+    case .isolated:
       return newBackgroundContext(true)
     }
   }
@@ -115,28 +115,28 @@ public class CoreDataStack {
   // MARK: - Utility
 
   /// Loads the managed object model for the given name.
-  public static func managedObjectModelForName(name: String) -> NSManagedObjectModel {
+  open static func managedObjectModelForName(_ name: String) -> NSManagedObjectModel {
     // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-    let modelURL = NSBundle.mainBundle().URLForResource(name, withExtension: "momd")!
-    return NSManagedObjectModel(contentsOfURL: modelURL)!
+    let modelURL = Bundle.main.url(forResource: name, withExtension: "momd")!
+    return NSManagedObjectModel(contentsOf: modelURL)!
   }
 
   /// Determines a default store URL for a store with the given name.
-  public static func defaultStoreURLWithName(name: String) -> NSURL {
-    let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+  open static func defaultStoreURLWithName(_ name: String) -> URL {
+    let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let applicationDocumentsDirectory = urls[urls.count-1] 
 
-    return applicationDocumentsDirectory.URLByAppendingPathComponent("\(name).sqlite")
+    return applicationDocumentsDirectory.appendingPathComponent("\(name).sqlite")
   }
 
   /// Tries to create a persistent store coordinator at the given URL, setting it up using the given
   /// managed object model.
-  public static func createPersistentStoreCoordinator(storeURL storeURL: NSURL, usingModel model: NSManagedObjectModel) -> NSPersistentStoreCoordinator? {
+  open static func createPersistentStoreCoordinator(storeURL: URL, usingModel model: NSManagedObjectModel) -> NSPersistentStoreCoordinator? {
     var error: NSError? = nil
 
     let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
     do {
-      try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
+      try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
     } catch let error1 as NSError {
       error = error1
     }
